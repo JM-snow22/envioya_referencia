@@ -1,47 +1,60 @@
+"""envios.py - Cálculo del costo de envío de EnvíaYa (Riohacha)."""
 from decimal import Decimal, ROUND_HALF_UP
 
-# envios.py
-CONFIG = {
-    "L1": 3,               # <- pon tus valores
-    "L2": 10,
-    "RECARGO_RURAL": 0.15,    # como fracción, ej. 0.15
-    "RECARGO_NACIONAL": 0.50,
-    "DESC_VIP": 0.15,
-    "RECARGO_FINDE": 2000,    # en pesos
-}
+# Parámetros del negocio (código estudiantil 0182410095)
+PESO_MAXIMO_KG = 50
+LIMITE_TRAMO_1_KG = 3          # incluido (D = 0 es par)
+LIMITE_TRAMO_2_KG = 10
+TARIFA_TRAMO_1 = 6000
+TARIFA_TRAMO_2 = 9000
+TARIFA_KG_ADICIONAL = 800
+RECARGO_RURAL = 0.15
+RECARGO_NACIONAL = 0.50
+DESCUENTO_FRECUENTE = 0.05
+DESCUENTO_VIP = 0.15
+DESCUENTO_CUPON_ENVIO10 = 0.10
+CUPON_ENVIO10 = "ENVIO10"
+RECARGO_FIN_DE_SEMANA = 2000   # después de los descuentos (E = 9 es impar)
+COSTO_MINIMO = 5000
+MULTIPLO_REDONDEO = 100
+SABADO = 6
+DOMINGO = 7
+
+
 def calc(p, z, c, d, cup=None, flag=False):
-    if p <= 0 or p > 50:
+    if p <= 0 or p > PESO_MAXIMO_KG:
         raise ValueError("peso inválido")
-    if d < 1 or d > 7:
+    if d < 1 or d > DOMINGO:
         raise ValueError("dia invalido")
-    if p <= CONFIG["L1"]:
-        t = 6000
-    elif p <= CONFIG["L2"]:
-        t = 9000
+    if p <= LIMITE_TRAMO_1_KG:
+        t = TARIFA_TRAMO_1
+    elif p <= LIMITE_TRAMO_2_KG:
+        t = TARIFA_TRAMO_2
     else:
-        t = 9000 + (p - CONFIG["L2"]) * 800
+        t = TARIFA_TRAMO_2 + (p - LIMITE_TRAMO_2_KG) * TARIFA_KG_ADICIONAL
     if z == "urbana":
-        t = t
+        pass
     elif z == "rural":
-        t = t + t * CONFIG["RECARGO_RURAL"]
+        t = t + t * RECARGO_RURAL
     elif z == "nacional":
-        t = t + t * CONFIG["RECARGO_NACIONAL"]
+        t = t + t * RECARGO_NACIONAL
     else:
         raise ValueError("zona invalida")
     if c == "frecuente":
-        t = t - t * 0.05
+        t = t - t * DESCUENTO_FRECUENTE
     if c == "vip":
-        t = t - t * CONFIG["DESC_VIP"]
-    if cup != None:
-        if cup == "ENVIO10":
-            t = t - t * 0.10
+        t = t - t * DESCUENTO_VIP
+    if cup is not None:
+        if cup == CUPON_ENVIO10:
+            t = t - t * DESCUENTO_CUPON_ENVIO10
         else:
             raise ValueError("cupon inexistente")
-    # fin de semana
-    if d >= 6:
-        t = t + CONFIG["RECARGO_FINDE"]
-    if t < 5000:
-        t = 5000
+    if d >= SABADO:
+        t = t + RECARGO_FIN_DE_SEMANA
+    if t < COSTO_MINIMO:
+        t = COSTO_MINIMO
     if flag:
         print("costo:", t)
-    return int((Decimal(str(round(t, 2))) / 100).quantize(Decimal("1"), rounding=ROUND_HALF_UP) * 100)
+    redondeado = (Decimal(str(round(t, 2))) / MULTIPLO_REDONDEO).quantize(
+        Decimal("1"), rounding=ROUND_HALF_UP)
+    return int(redondeado * MULTIPLO_REDONDEO)
