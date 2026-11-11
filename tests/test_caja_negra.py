@@ -32,7 +32,7 @@ CASOS = [
     # Particiones de zona
     ("CP13", 5, "rural", "normal", 2, None, 10400),
     ("CP14", 5, "nacional", "normal", 2, None, 13500),
-    ("CP15", 5, "insular", "normal", 2, None, ERROR),
+    ("CP15", 5, "internacional", "normal", 2, None, ERROR),
     ("CP16", 12.5, "nacional", "normal", 2, None, 16500),
     # Particiones y límites de día
     ("CP17", 5, "urbana", "normal", 0, None, ERROR),
