@@ -11,7 +11,7 @@ CONFIG = {
 }
 def calc(p, z, c, d, cup=None, flag=False):
     if p <= 0 or p > 50:
-        raise ValueError("peso invalido")
+        raise ValueError("peso inválido")
     if d < 1 or d > 7:
         raise ValueError("dia invalido")
     if p <= CONFIG["L1"]:
