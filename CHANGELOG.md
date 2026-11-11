@@ -53,8 +53,3 @@ y el proyecto sigue [Versionado Semántico](https://semver.org/lang/es/).
 
 ### Added
 - Código heredado de `calc()` con la configuración de mis parámetros.
-
-[Unreleased]: https://github.com/USUARIO/envioya/compare/v2.1.0...HEAD
-[2.1.0]: https://github.com/USUARIO/envioya/compare/v2.0.0...v2.1.0
-[2.0.0]: https://github.com/USUARIO/envioya/compare/v1.0.0...v2.0.0
-[1.0.0]: https://github.com/USUARIO/envioya/releases/tag/v1.0.0
