@@ -22,6 +22,8 @@ def calc(p, z, c, d, cup=None, flag=False):
         t = t + t * CONFIG["RECARGO_RURAL"]
     elif z == "nacional":
         t = t + t * CONFIG["RECARGO_NACIONAL"]
+    else:
+        raise ValueError("zona invalida")
     if c == "frecuente":
         t = t - t * 0.05
     if c == "vip":
