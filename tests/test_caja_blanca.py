@@ -60,6 +60,10 @@ def test_camino_13_minimo():
     assert calc(2, "urbana", "vip", 3, "ENVIO10") == 5000
 
 
-def test_camino_14_flag(capsys):
-    assert calc(2, "urbana", "normal", 3, None, flag=True) == 6000
-    assert "costo:" in capsys.readouterr().out
+def test_camino_14_flag_eliminado():
+    """En v1 este camino imprimía con flag=True. En v2 el argumento flag se
+    eliminó (cambio de interfaz -> versión MAJOR), así que el camino ya no
+    existe: se verifica el mismo resultado y que flag ya no se acepta."""
+    assert calc(2, "urbana", "normal", 3, None) == 6000
+    with pytest.raises(TypeError):
+        calc(2, "urbana", "normal", 3, None, flag=True)
