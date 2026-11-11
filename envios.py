@@ -18,6 +18,7 @@ TARIFA_KG_ADICIONAL = Decimal("800")
 
 RECARGO_RURAL = Decimal("0.15")
 RECARGO_NACIONAL = Decimal("0.50")
+RECARGO_INSULAR = Decimal("0.70")       # solicitud de cambio 0 (San Andrés)
 
 DESCUENTOS_CLIENTE = {
     "normal": Decimal("0"),
@@ -39,6 +40,7 @@ class EstrategiaZona(ABC):
     """Cada zona sabe cómo aplicar su recargo sobre la tarifa base."""
 
     porcentaje_recargo = Decimal("0")
+    acepta_cupon = True
 
     def aplicar_recargo(self, tarifa: Decimal) -> Decimal:
         return tarifa * (1 + self.porcentaje_recargo)
@@ -67,7 +69,20 @@ class ZonaNacional(EstrategiaZona):
         return "nacional"
 
 
-ZONAS = {z.nombre(): z for z in (ZonaUrbana(), ZonaRural(), ZonaNacional())}
+class ZonaInsular(EstrategiaZona):
+    """San Andrés: recargo del 70 % y no acepta cupón."""
+
+    porcentaje_recargo = RECARGO_INSULAR
+    acepta_cupon = False
+
+    def nombre(self) -> str:
+        return "insular"
+
+
+ZONAS = {
+    z.nombre(): z
+    for z in (ZonaUrbana(), ZonaRural(), ZonaNacional(), ZonaInsular())
+}
 
 
 # ------------------------------------------------------ funciones extraídas
@@ -131,7 +146,8 @@ def calcular_costo_envio(peso, zona, cliente, dia, cupon=None) -> int:
 
     costo = tarifa_base(peso)
     costo = estrategia_zona.aplicar_recargo(costo)
-    costo = aplicar_descuentos(costo, cliente, cupon)
+    cupon_aplicable = cupon if estrategia_zona.acepta_cupon else None
+    costo = aplicar_descuentos(costo, cliente, cupon_aplicable)
     costo = aplicar_recargo_fin_de_semana(costo, dia)
     costo = max(costo, COSTO_MINIMO)
     return redondear_a_100(costo)

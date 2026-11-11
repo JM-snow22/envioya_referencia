@@ -7,6 +7,19 @@ y el proyecto sigue [Versionado Semántico](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+## [2.1.0] - 2026-11-11
+
+### Added
+- Zona `insular` (San Andrés) con recargo del 70 %, implementada como una
+  nueva estrategia (`ZonaInsular`) sin modificar las demás zonas.
+- Pruebas CI01 a CI05 de la zona insular, escritas antes de implementar.
+
+### Changed
+- Los envíos insulares no aplican el cupón ENVIO10. Un cupón inexistente
+  sigue produciendo error.
+- La prueba CP15 usa ahora la zona `internacional` como ejemplo de zona
+  inválida, porque `insular` pasó a ser válida.
+
 ## [2.0.0] - 2026-11-11
 
 ### Added
@@ -41,6 +54,7 @@ y el proyecto sigue [Versionado Semántico](https://semver.org/lang/es/).
 ### Added
 - Código heredado de `calc()` con la configuración de mis parámetros.
 
-[Unreleased]: https://github.com/USUARIO/envioya/compare/v2.0.0...HEAD
+[Unreleased]: https://github.com/USUARIO/envioya/compare/v2.1.0...HEAD
+[2.1.0]: https://github.com/USUARIO/envioya/compare/v2.0.0...v2.1.0
 [2.0.0]: https://github.com/USUARIO/envioya/compare/v1.0.0...v2.0.0
 [1.0.0]: https://github.com/USUARIO/envioya/releases/tag/v1.0.0
